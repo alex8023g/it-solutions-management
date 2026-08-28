@@ -15,9 +15,11 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  */
 type Documents = {
     "\n  query ApiStatus {\n    status {\n      message\n      timestamp\n    }\n  }\n": typeof types.ApiStatusDocument,
+    "\n  query ProfileCard {\n    profile {\n      fullName\n      headline\n      bio\n      location\n      email\n      photoUrl\n      availableForWork\n      skills {\n        id\n        name\n        category\n      }\n      projects {\n        id\n        title\n        description\n        url\n        repoUrl\n        stack\n        year\n      }\n      links {\n        id\n        kind\n        label\n        url\n      }\n    }\n  }\n": typeof types.ProfileCardDocument,
 };
 const documents: Documents = {
     "\n  query ApiStatus {\n    status {\n      message\n      timestamp\n    }\n  }\n": types.ApiStatusDocument,
+    "\n  query ProfileCard {\n    profile {\n      fullName\n      headline\n      bio\n      location\n      email\n      photoUrl\n      availableForWork\n      skills {\n        id\n        name\n        category\n      }\n      projects {\n        id\n        title\n        description\n        url\n        repoUrl\n        stack\n        year\n      }\n      links {\n        id\n        kind\n        label\n        url\n      }\n    }\n  }\n": types.ProfileCardDocument,
 };
 
 /**
@@ -38,6 +40,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query ApiStatus {\n    status {\n      message\n      timestamp\n    }\n  }\n"): (typeof documents)["\n  query ApiStatus {\n    status {\n      message\n      timestamp\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query ProfileCard {\n    profile {\n      fullName\n      headline\n      bio\n      location\n      email\n      photoUrl\n      availableForWork\n      skills {\n        id\n        name\n        category\n      }\n      projects {\n        id\n        title\n        description\n        url\n        repoUrl\n        stack\n        year\n      }\n      links {\n        id\n        kind\n        label\n        url\n      }\n    }\n  }\n"): (typeof documents)["\n  query ProfileCard {\n    profile {\n      fullName\n      headline\n      bio\n      location\n      email\n      photoUrl\n      availableForWork\n      skills {\n        id\n        name\n        category\n      }\n      projects {\n        id\n        title\n        description\n        url\n        repoUrl\n        stack\n        year\n      }\n      links {\n        id\n        kind\n        label\n        url\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
