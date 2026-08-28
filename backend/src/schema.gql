@@ -10,12 +10,89 @@ type ApiStatus {
   timestamp: DateTime!
 }
 
+"""An outbound way to reach the specialist."""
+type ContactLink {
+  id: String!
+  kind: ContactLinkKind!
+  label: String!
+
+  """Display order; lower comes first."""
+  position: Int!
+  url: String!
+}
+
+"""What kind of channel a contact link points at."""
+enum ContactLinkKind {
+  EMAIL
+  GITHUB
+  LINKEDIN
+  OTHER
+  PHONE
+  TELEGRAM
+  WEBSITE
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
+"""The specialist this card presents."""
+type Profile {
+  availableForWork: Boolean!
+  bio: String
+  email: String
+  fullName: String!
+
+  """Short professional tagline shown under the name."""
+  headline: String!
+  id: Int!
+
+  """Ordered by position."""
+  links: [ContactLink!]!
+  location: String
+  photoUrl: String
+
+  """Ordered by position."""
+  projects: [Project!]!
+
+  """Ordered by position."""
+  skills: [Skill!]!
+}
+
+"""A portfolio entry."""
+type Project {
+  description: String
+  id: String!
+
+  """Display order; lower comes first."""
+  position: Int!
+  repoUrl: String
+
+  """Stack the project was built with."""
+  stack: [String!]!
+  title: String!
+  url: String
+  year: Int
+}
+
 type Query {
+  """The card owner, or null before the database has been seeded."""
+  profile: Profile
+
   """Basic liveness info about the API."""
   status: ApiStatus!
+}
+
+"""A technology or competence shown on the card."""
+type Skill {
+  category: String
+  id: String!
+
+  """Self-assessed proficiency, 1-5."""
+  level: Int
+  name: String!
+
+  """Display order; lower comes first."""
+  position: Int!
 }

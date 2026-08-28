@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PrismaModule } from './prisma/prisma.module';
       sortSchema: true,
       graphiql: process.env.NODE_ENV !== 'production',
     }),
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
