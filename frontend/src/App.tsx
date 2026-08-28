@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ApiStatus } from './components/ApiStatus'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
@@ -28,6 +29,7 @@ function App() {
         >
           Count is {count}
         </button>
+        <ApiStatus />
       </section>
 
       <div className="ticks"></div>
