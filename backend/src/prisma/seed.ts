@@ -1,0 +1,118 @@
+import { PrismaPg } from '@prisma/adapter-pg';
+import { ContactLinkKind, PrismaClient } from '../generated/prisma/client';
+
+// Seeding runs outside the Nest container, so the connection string is read
+// straight from the environment rather than through ConfigService.
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error('DATABASE_URL is not set — seed aborted.');
+}
+
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString }),
+});
+
+// TODO: replace the placeholders below with your own details before publishing.
+const profile = {
+  fullName: 'Алексей Грачев',
+  headline: 'Full-stack TypeScript developer',
+  bio:
+    'Short biography goes here: what you build, the problems you like solving, ' +
+    'and how you prefer to work. Two or three sentences is plenty for a card.',
+  location: 'Москва, Россия',
+  email: 'alex8023@yandex.ru',
+  photoUrl: null,
+  availableForWork: true,
+};
+
+const skills = [
+  { name: 'TypeScript', category: 'Language', level: 5, position: 0 },
+  { name: 'Node.js', category: 'Backend', level: 5, position: 1 },
+  { name: 'NestJS', category: 'Backend', level: 4, position: 2 },
+  { name: 'GraphQL', category: 'Backend', level: 4, position: 3 },
+  { name: 'Prisma', category: 'Data', level: 4, position: 4 },
+  { name: 'CockroachDB', category: 'Data', level: 3, position: 5 },
+  { name: 'React', category: 'Frontend', level: 4, position: 6 },
+  { name: 'Vite', category: 'Frontend', level: 4, position: 7 },
+  { name: 'Docker', category: 'Tooling', level: 4, position: 8 },
+  { name: 'Git', category: 'Tooling', level: 5, position: 9 },
+];
+
+const projects = [
+  {
+    title: 'Digital business card',
+    description:
+      'This site. NestJS + GraphQL API backed by Prisma and CockroachDB, ' +
+      'with a React frontend generating typed operations from the schema.',
+    url: null,
+    repoUrl: null,
+    stack: [
+      'TypeScript',
+      'NestJS',
+      'GraphQL',
+      'Prisma',
+      'CockroachDB',
+      'React',
+    ],
+    year: 2026,
+    position: 0,
+  },
+];
+
+const links = [
+  {
+    kind: ContactLinkKind.EMAIL,
+    label: 'Email',
+    url: 'mailto:you@example.com',
+    position: 0,
+  },
+  {
+    kind: ContactLinkKind.GITHUB,
+    label: 'GitHub',
+    url: 'https://github.com/your-handle',
+    position: 1,
+  },
+  {
+    kind: ContactLinkKind.TELEGRAM,
+    label: 'Telegram',
+    url: 'https://t.me/your-handle',
+    position: 2,
+  },
+];
+
+async function main(): Promise<void> {
+  // Profile is a singleton pinned to id 1, so upsert rather than create: the
+  // seed stays re-runnable and never accumulates a second card.
+  await prisma.profile.upsert({
+    where: { id: 1 },
+    update: profile,
+    create: { id: 1, ...profile },
+  });
+
+  // The child tables describe the one card in full, so the seed replaces them
+  // wholesale instead of merging — that keeps a re-run idempotent and drops
+  // entries removed from the arrays above.
+  await prisma.$transaction([
+    prisma.skill.deleteMany(),
+    prisma.project.deleteMany(),
+    prisma.contactLink.deleteMany(),
+    prisma.skill.createMany({ data: skills }),
+    prisma.project.createMany({ data: projects }),
+    prisma.contactLink.createMany({ data: links }),
+  ]);
+
+  console.log(
+    `Seeded profile with ${skills.length} skills, ` +
+      `${projects.length} projects, ${links.length} contact links.`,
+  );
+}
+
+main()
+  .catch((error: unknown) => {
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(() => {
+    void prisma.$disconnect();
+  });

@@ -1,0 +1,87 @@
+// Prisma schema for the digital business card.
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  // Kept inside src/ so `nest build` keeps emitting dist/main.js.
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  // CockroachDB speaks the PostgreSQL wire protocol, but the provider must be
+  // `cockroachdb` so Prisma maps CRDB-specific types and defaults correctly.
+  provider = "cockroachdb"
+}
+
+/// The one specialist this card presents.
+///
+/// Singleton by convention: `id` defaults to 1 and every read uses
+/// `prisma.profile.findUnique({ where: { id: 1 } })`, so nothing downstream
+/// has to pick between profiles. Deliberately not enforced with a CHECK
+/// constraint — Prisma cannot model one, so it would show up as drift on
+/// every `migrate diff` against the live database.
+model Profile {
+  id Int @id @default(1)
+
+  fullName String
+  /// Short professional tagline shown under the name.
+  headline String
+  bio      String?
+  location String?
+  email    String?
+  photoUrl String?
+
+  availableForWork Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// A technology or competence, grouped into a named category on the card.
+model Skill {
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String  @unique
+  category String?
+  /// Self-assessed proficiency, 1-5.
+  level    Int?
+  /// Display order within its category; lower comes first.
+  position Int     @default(0)
+
+  @@index([position])
+}
+
+/// A portfolio entry.
+model Project {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String?
+  url         String?
+  repoUrl     String?
+  /// Stack the project was built with.
+  stack       String[]
+  year        Int?
+  position    Int      @default(0)
+
+  @@index([position])
+}
+
+enum ContactLinkKind {
+  EMAIL
+  PHONE
+  TELEGRAM
+  GITHUB
+  LINKEDIN
+  WEBSITE
+  OTHER
+}
+
+/// An outbound way to reach the specialist.
+model ContactLink {
+  id       String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  kind     ContactLinkKind
+  label    String
+  url      String
+  position Int             @default(0)
+
+  @@index([position])
+}
