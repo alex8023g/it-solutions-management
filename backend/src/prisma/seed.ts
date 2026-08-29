@@ -42,36 +42,38 @@ const skills = [
 
 const projects = [
   {
-    title: 'Otpuskplan.ru',
+    title: 'Pomodoro iOS app',
     description:
-      'This site. NextJS + Tailwind CSS backed by Prisma and PostgreSQL, ' +
-      'with a React frontend generating typed operations from the schema.',
-    url: 'https://otpuskplan.ru',
+      'Таймер по методике Pomodoro для iOS, опубликован в App Store. ' +
+      'React и TypeScript, сборка нативного приложения через Capacitor.',
+    url: 'https://apps.apple.com/ru/app/pomodoro3/id6756366096',
     repoUrl: 'https://github.com/alex8023g/bank-holidays',
-    stack: ['TypeScript', 'NextJS', 'Prisma', 'Postgres', 'React'],
+    stack: ['TypeScript', 'React', 'Capacitor', 'iOS'],
     year: 2026,
     position: 0,
   },
   {
     title: 'S3 storage',
     description:
-      'This site. NextJS + S3 Minio storage, ' +
-      'with a React frontend generating typed operations from the schema.',
+      'Пример работы с объектным хранилищем: загрузка, хранение ' +
+      'и раздача файлов через S3-совместимый MinIO. Next.js ' +
+      'и TypeScript.',
     url: 'https://grachev.dev/examples/s3miniostorage',
     repoUrl: 'https://github.com/alex8023g/bank-holidays',
     stack: ['TypeScript', 'NextJS', 'S3', 'Minio'],
-    year: 2026,
+    year: 2024,
     position: 0,
   },
   {
-    title: 'Pomodoro iOS app',
+    title: 'Otpuskplan.ru',
     description:
-      'This site. NextJS + Tailwind CSS backed by Prisma and PostgreSQL, ' +
-      'with a React frontend generating typed operations from the schema.',
-    url: 'https://apps.apple.com/ru/app/pomodoro3/id6756366096',
+      'Планировщик отпуска с учётом производственного календаря ' +
+      'и переносов праздничных дней. Next.js и React, вёрстка на ' +
+      'Tailwind CSS, данные в PostgreSQL через Prisma.',
+    url: 'https://otpuskplan.ru',
     repoUrl: 'https://github.com/alex8023g/bank-holidays',
-    stack: ['TypeScript', 'React', 'Capacitor', 'iOS'],
-    year: 2026,
+    stack: ['TypeScript', 'NextJS', 'Prisma', 'Postgres', 'React'],
+    year: 2025,
     position: 0,
   },
 ];
