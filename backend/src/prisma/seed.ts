@@ -18,11 +18,12 @@ const profile = {
   fullName: 'Алексей Грачев',
   headline: 'Full-stack TypeScript developer',
   bio:
-    'Short biography goes here: what you build, the problems you like solving, ' +
-    'and how you prefer to work. Two or three sentences is plenty for a card.',
+    'Full-stack разработчик на TypeScript: собираю API на NestJS и GraphQL ' +
+    'и интерфейсы на React. Люблю задачи, где нужно навести порядок в данных ' +
+    'и довести проект до продакшена — от схемы БД до деплоя в Docker.',
   location: 'Москва, Россия',
   email: 'alex8023@yandex.ru',
-  photoUrl: null,
+  photoUrl: '/myphoto.jpg',
   availableForWork: true,
 };
 
@@ -41,20 +42,35 @@ const skills = [
 
 const projects = [
   {
-    title: 'Digital business card',
+    title: 'Otpuskplan.ru',
     description:
-      'This site. NestJS + GraphQL API backed by Prisma and CockroachDB, ' +
+      'This site. NextJS + Tailwind CSS backed by Prisma and PostgreSQL, ' +
       'with a React frontend generating typed operations from the schema.',
-    url: null,
-    repoUrl: null,
-    stack: [
-      'TypeScript',
-      'NestJS',
-      'GraphQL',
-      'Prisma',
-      'CockroachDB',
-      'React',
-    ],
+    url: 'https://otpuskplan.ru',
+    repoUrl: 'https://github.com/alex8023g/bank-holidays',
+    stack: ['TypeScript', 'NextJS', 'Prisma', 'Postgres', 'React'],
+    year: 2026,
+    position: 0,
+  },
+  {
+    title: 'S3 storage',
+    description:
+      'This site. NextJS + S3 Minio storage, ' +
+      'with a React frontend generating typed operations from the schema.',
+    url: 'https://grachev.dev/examples/s3miniostorage',
+    repoUrl: 'https://github.com/alex8023g/bank-holidays',
+    stack: ['TypeScript', 'NextJS', 'S3', 'Minio'],
+    year: 2026,
+    position: 0,
+  },
+  {
+    title: 'Pomodoro OS app',
+    description:
+      'This site. NextJS + Tailwind CSS backed by Prisma and PostgreSQL, ' +
+      'with a React frontend generating typed operations from the schema.',
+    url: 'https://apps.apple.com/ru/app/pomodoro3/id6756366096',
+    repoUrl: 'https://github.com/alex8023g/bank-holidays',
+    stack: ['TypeScript', 'React', 'Capacitor', 'iOS'],
     year: 2026,
     position: 0,
   },
