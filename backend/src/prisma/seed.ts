@@ -64,7 +64,7 @@ const projects = [
     position: 0,
   },
   {
-    title: 'Pomodoro OS app',
+    title: 'Pomodoro iOS app',
     description:
       'This site. NextJS + Tailwind CSS backed by Prisma and PostgreSQL, ' +
       'with a React frontend generating typed operations from the schema.',
@@ -80,19 +80,19 @@ const links = [
   {
     kind: ContactLinkKind.EMAIL,
     label: 'Email',
-    url: 'mailto:you@example.com',
+    url: 'mailto:alex8023@yandex.ru',
     position: 0,
   },
   {
     kind: ContactLinkKind.GITHUB,
     label: 'GitHub',
-    url: 'https://github.com/your-handle',
+    url: 'https://github.com/alex8023g',
     position: 1,
   },
   {
     kind: ContactLinkKind.TELEGRAM,
     label: 'Telegram',
-    url: 'https://t.me/your-handle',
+    url: 'https://t.me/alex80231',
     position: 2,
   },
 ];
