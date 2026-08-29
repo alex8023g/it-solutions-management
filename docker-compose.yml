@@ -7,10 +7,12 @@ services:
   db:
     image: cockroachdb/cockroach:v25.4.15
     command: start-single-node --insecure
+    # Loopback only. Nothing outside the host has any business reaching an
+    # --insecure single-node cluster; tunnel over SSH to use these.
     ports:
-      - '${DB_PORT:-26257}:26257'
+      - '127.0.0.1:${DB_PORT:-26257}:26257'
       # Cockroach DB Console.
-      - '${DB_CONSOLE_PORT:-8081}:8080'
+      - '127.0.0.1:${DB_CONSOLE_PORT:-8081}:8080'
     volumes:
       - db-data:/cockroach/cockroach-data
     healthcheck:
@@ -41,8 +43,12 @@ services:
       NODE_ENV: production
       PORT: 3000
       DATABASE_URL: ${DATABASE_URL:-postgresql://root@db:26257/defaultdb?sslmode=disable}
+    # Loopback only: the frontend's nginx reaches the API over the compose
+    # network as backend:3000, so this publish exists purely for debugging on
+    # the host. The container port stays 3000 whatever BACKEND_PORT is — the
+    # nginx proxy_pass and the healthcheck below both target it directly.
     ports:
-      - '${BACKEND_PORT:-3000}:3000'
+      - '127.0.0.1:${BACKEND_PORT:-3010}:3000'
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -67,8 +73,10 @@ services:
         # Relative endpoint: nginx proxies /graphql to the backend service, so
         # the browser never needs to know the API's address.
         VITE_GRAPHQL_ENDPOINT: ${VITE_GRAPHQL_ENDPOINT:-/graphql}
+    # Loopback only: in production Caddy runs on the host, terminates TLS and
+    # reverse-proxies to this port, so the container never faces the internet.
     ports:
-      - '${FRONTEND_PORT:-8080}:80'
+      - '127.0.0.1:${FRONTEND_PORT:-8080}:80'
     depends_on:
       backend:
         condition: service_healthy
