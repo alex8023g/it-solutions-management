@@ -1,0 +1,78 @@
+name: it-solutions-management
+
+services:
+  # Single-node CockroachDB for local runs. Production points DATABASE_URL at
+  # the Cockroach Cloud cluster instead and this service can be skipped with
+  # `docker compose up backend frontend`.
+  db:
+    image: cockroachdb/cockroach:v25.4.15
+    command: start-single-node --insecure
+    ports:
+      - '${DB_PORT:-26257}:26257'
+      # Cockroach DB Console.
+      - '${DB_CONSOLE_PORT:-8081}:8080'
+    volumes:
+      - db-data:/cockroach/cockroach-data
+    healthcheck:
+      test: ['CMD', 'cockroach', 'sql', '--insecure', '-e', 'SELECT 1']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  # One-shot: applies prisma/migrations, then seeds the card. Both steps are
+  # idempotent, so it is safe on every `up`.
+  migrate:
+    build:
+      context: ./backend
+      target: migrate
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://root@db:26257/defaultdb?sslmode=disable}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+
+  backend:
+    build:
+      context: ./backend
+      target: runtime
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: ${DATABASE_URL:-postgresql://root@db:26257/defaultdb?sslmode=disable}
+    ports:
+      - '${BACKEND_PORT:-3000}:3000'
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('node:http').get('http://127.0.0.1:3000/',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Relative endpoint: nginx proxies /graphql to the backend service, so
+        # the browser never needs to know the API's address.
+        VITE_GRAPHQL_ENDPOINT: ${VITE_GRAPHQL_ENDPOINT:-/graphql}
+    ports:
+      - '${FRONTEND_PORT:-8080}:80'
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  db-data:
